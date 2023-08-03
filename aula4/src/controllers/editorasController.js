@@ -64,9 +64,15 @@ class EditorasController {
     const { params } = req;
     try {
       const resultado = await Editora.pegarPeloId(params.id);
-      const listaLivros = await Editora.pegarLivrosPorEditora(params.id);
-      return res.status(200).json({ editora: resultado[0], livros: listaLivros });
+      if(resultado) {
+        const listaLivros = await Editora.pegarLivrosPorEditora(params.id);
+
+        return res.status(200).json({ editora: resultado[0], livros: listaLivros });
+      }
+      
+      return res.status(404).json({message: 'Editora ID não encontrado'});
     } catch (err) {
+      
       return res.status(500).json(err.message);
     }
   };

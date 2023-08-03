@@ -55,6 +55,28 @@ describe('GET em /editoras/id', () => {
     });
 })
 
+describe('Get em /editoras/id/livros', () => {
+    it('Deve retornar os livros da editora selecionada', async () => {
+        const resposta = await request(app)
+            .get(`/editoras/${idResposta}/livros`)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(200);
+        
+        expect(resposta.body).toHaveProperty('livros');
+    });
+
+    it('Deve retornar erro 404, editora não encontrada', async () => {
+        const resposta = await request(app)
+            .get(`/editoras/${99999999999}/livros`)
+            .set('Accept', 'application/json')
+            .expect('Content-Type', /json/)
+            .expect(404);
+        
+        expect(resposta.body.message).toBe("Editora ID não encontrado");
+    });
+});
+
 describe('PUT em /editoras/id', () => {
     test.each([
         ['nome', {nome: 'Casa do Codigo'}],
